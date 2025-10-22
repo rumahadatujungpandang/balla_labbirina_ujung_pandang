@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtual Tour Rumah Adat</title>
+<script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    body, html {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background-color: #223768;
+    }
+    #panorama {
+        width: 100%;
+        height: 100vh;
+    }
+    #mainMenuBtn {
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        background: rgba(190, 124, 144, 0.95);
+        color: white;
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(145, 114, 114, 0.3);
+        cursor: pointer;
+        transition: all 0.3s;
+        z-index: 1000;
+    }
+    #mainMenuBtn:hover {
+        background: rgba(87, 35, 57, 0.95);
+        transform: translateY(-2px);
+    }
+   #infoPanel {
+        position: fixed;
+        top: 20px;
+        right: 0;
+        width: 500px;
+        height: 85vh;
+        backdrop-filter: blur(14px);
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        padding: 20px;
+        border-radius: 16px 0 0 16px;
+        box-shadow: -6px 6px 25px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transform: translateX(0);
+        transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+        z-index: 900;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255,255,255,0.5) transparent;
+    }
+    #infoPanel.hidden {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    #togglePanel {
+        position: fixed;
+        top: 25px;
+        right: 515px;
+        background: rgba(190, 124, 144, 0.9);
+        color: white;
+        padding: 10px 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 18px;
+        font-weight: bold;
+        z-index: 950;
+    }
+    #togglePanel:hover {
+        background: rgba(87, 35, 57, 0.9);
+        transform: scale(1.05);
+    }
+    #sceneBar {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 10px 20px;
+        border-radius: 20px;
+        display: flex;
+        gap: 8px;
+        box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
+        z-index: 900;
+    }
+    .scene-button {
+        background: rgba(255, 255, 255, 0.8);
+        color: #df64c4;
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-size: 14px;
+        transition: all 0.25s;
+    }
+    .scene-button:hover {
+        background: #b376a3;
+        color: white;
+        transform: scale(1.08);
+    }
+    @keyframes fadeSlideIn {
+        from {opacity: 0; transform: translateX(50px);}
+        to {opacity: 1; transform: translateX(0);}
+    }
+    #infoPanel h2, #infoPanel p {
+        animation: fadeSlideIn 0.6s ease;
+    }
+</style>
+</head>
+<body>
+
+<button id="mainMenuBtn">🏠 Menu Utama</button>
+
+<div id="panorama"></div>
+
+<div id="infoPanel"  class="hidden">
+    <div class="flex items-center gap-2 mb-3">
+        <h2 class="text-xl font-bold">SEJARAH RUMAH ADAT BALLA LABBIRINA UJUNG PANDANG</h2>
+    </div>
+    <p class="text-sm leading-relaxed text-gray-100">
+        Daerah Ujung Pandang atau yang sekarang dikenal dengan Makassar pada awalnya tidak memiliki rumah adat. Masyarakat Makassar saat itu cenderung mengadopsi bentuk dan gaya arsitektur dari rumah adat Kabupaten Gowa atau rumah adat Suku Bugis. Melalui proses interaksi dan asimilasi budaya yang berlangsung lama, lahirlah corak arsitektur baru yang dikenal sebagai rumah adat Bugis-Makassar. Sementara itu Balla Labbirina Ujung Pandang yang kini berdiri di kawasan Somba Opu dibangun sebagai representasi resmi dan simbol identitas Kota Makassar setelah wilayah tersebut ditetapkan sebagai kabupaten. Rumah adat ini di bangun di Somba Opu pada tahun 1990 (Ihsan, M., 2019).
+"Balla Labbirina Ujung Pandang" adalah sebutan bagi rumah adat yang menjadi representasi Kota Makassar di kompleks cagar budaya Benteng Somba Opu. Bangunan ini bukan hanya sekadar replika arsitektur tradisional, tetapi juga berfungsi sebagai pusat kegiatan budaya dan simbol pelestarian identitas suku Makassar. Benteng tersebut memiliki peranan penting sebagai pusat kekuasaan pemerintahan Kerajaan Gowa, perdagangan, dan interaksi budaya di Sulawesi Selatan. Secara harfiah, "Balla Labbirina" berasal dari bahasa Makassar. "Balla" berarti rumah, dan "Labbirina" dapat diartikan sebagai yang paling utama, agung, atau inti. Dalam konteks arsitektur tradisional Makassar, istilah ini merujuk pada bagian utama atau inti dari sebuah rumah. Sejarahnya terkait erat dengan revitalisasi Benteng Somba Opu sebagai taman miniatur budaya Sulawesi Selatan.
+Benteng Somba Opu sendiri memiliki peran penting dalam sejarah Sulawesi Selatan. Selain sebagai benteng pertahanan, tempat ini dulu merupakan pusat pemerintahan kerajaan Gowa dimana di dalamnya terdapat istana raja Gowa, yang menjadi pusat perdagangan dan pertemuan budaya pada abad ke-16 (Sulsel, M., 2023). Setelah sempat hancur dan terendam, benteng ini ditemukan kembali pada era 1980-an dan direkonstruksi pada awal 1990-an. Seiring dengan revitalisasi kawasan benteng, pemerintah memprakarsai pembangunan sebuah taman miniatur yang menampilkan rumah adat dari berbagai suku dan kabupaten/kota di Sulawesi Selatan. Di dalam kompleks inilah "Balla Labbirina Ujung Pandang" didirikan sebagai anjungan atau paviliun resmi untuk Kota Makassar (dahulu Ujung Pandang). Tujuan pendiriannya adalah untuk memberikan edukasi kepada masyarakat mengenai kekayaan arsitektur dan budaya Makassar, serta menjadi pusat kegiatan kebudayaan bagi masyarakat kota (Pabittei, Masrury, Arifah, & Abbas, 1995).
+Seiring berjalannya waktu, kondisi beberapa rumah adat di Benteng Somba Opu mengalami kerusakan. Menyadari pentingnya pelestarian aset budaya ini, Pemerintah Kota Makassar melalui Dinas Kebudayaan pada akhir tahun 2023 mengalokasikan anggaran untuk merenovasi atau membangun kembali "Balla Labbirina Ujung Pandang" (Hitam, 2023). Proyek revitalisasi ini tidak hanya memperbaiki fisik bangunan, tetapi juga mengembalikan fungsinya sebagai pusat kegiatan adat dan budaya. Salah satu kegiatan yang menandai hidupnya kembali rumah adat ini adalah pelaksanaan ritual Appasili pada Desember 2023. Ritual Appasili merupakan proses akulturasi antara budaya lokal dengan Islam, untuk meningkatkan kecintaan terhadap budaya dan tradisi, serta mempertahankan warisan budaya leluhur (Yuliani, D., 2023).
+Kini, "Balla Labbirina Ujung Pandang" berdiri megah di Benteng Somba Opu, tidak hanya sebagai representasi arsitektur, tetapi juga sebagai bukti nyata dari upaya pelestarian budaya dan penguatan identitas masyarakat Makassar di tengah modernisasi.
+
+    </p>
+</div>
+<div id="togglePanel">❯</div>
+<div id="sceneBar">
+    <button class="scene-button" onclick="changeScene('scene12')">1</button>
+    <button class="scene-button" onclick="changeScene('scene1')">2</button>
+    <button class="scene-button" onclick="changeScene('scene2')">3</button>
+    <button class="scene-button" onclick="changeScene('scene3')">4</button>
+    <button class="scene-button" onclick="changeScene('scene4')">5</button>
+    <button class="scene-button" onclick="changeScene('scene5')">6</button>
+    <button class="scene-button" onclick="changeScene('scene6')">7</button>
+    <button class="scene-button" onclick="changeScene('scene7')">8</button>
+    <button class="scene-button" onclick="changeScene('scene8')">9</button>
+    <button class="scene-button" onclick="changeScene('scene9')">10</button>
+    <button class="scene-button" onclick="changeScene('scene10')">11</button>
+    <button class="scene-button" onclick="changeScene('scene11')">12</button>
+</div>
+
+<script>
+    const viewer = pannellum.viewer('panorama', {
+        default: { firstScene: 'scene12', autoLoad: true },
+        scenes: {
+            "scene1":{
+                "title": "Halaman Depan",
+                "type": "equirectangular",
+                "panorama": "/assets/360_images/halamandepan.jpg",
+                "hotSpots": [
+                {
+                    "yaw": -30,
+                    "pitch": -10,
+                    "type": "scene",
+                    "text": "Go to Tangga Utama",  // Tooltip
+                    "sceneId": "scene2"  // Link to scene2
+                },
+                {
+                    "yaw": 5,
+                    "pitch": -5,
+                    "type": "scene",
+                    "text": "Go to Passinringan",  // Tooltip
+                    "sceneId": "scene3"  // Link to scene3
+                },
+                {
+                    "yaw": 45,
+                    "pitch": -2,
+                    "type": "scene",
+                    "text": "Go to Samping Kanan",  // Tooltip
+                    "sceneId": "scene7"  // Link to scene7
+                },
+                {
+                    "yaw": -33,
+                    "pitch": -3,
+                    "type": "scene",
+                    "text": "Go to Samping Kiri",  // Tooltip
+                    "sceneId": "scene8"  // Link to scene8
+                },
+                {
+                    "yaw": 180,
+                    "pitch": 0,
+                    "type": "scene",
+                    "text": "Keluar",  // Tooltip
+                    "sceneId": "scene12"  // Link to scene12
+                }
+            ]
+        },
+            "scene2":{
+                "title": "Tangga Utama",
+                "type": "equirectangular",
+                "panorama": "/assets/360_images/tanggautama.jpg",
+                "hotSpots": [
+                {
+                    "yaw": 60,
+                    "pitch": -10,
+                    "type": "scene",
+                    "text": "Go to Halaman Depan",  // Tooltip
+                    "sceneId": "scene1"  // Link to scene1
+                },
+                 {
+                    "yaw": 0,
+                    "pitch": 15,
+                    "type": "scene",
+                    "text": "Go to Loteng",  // Tooltip
+                    "sceneId": "scene4"  // Link to scene4
+                },
+                 {
+                    "yaw": -78,
+                    "pitch": -8,
+                    "type": "scene",
+                    "text": "Go to Tangga Kedua",  // Tooltip
+                    "sceneId": "scene5"  // Link to scene5
+                },
+                 {
+                    "yaw": -45,
+                    "pitch": -7,
+                    "type": "scene",
+                    "text": "Go to Passinringan",  // Tooltip
+                    "sceneId": "scene3"  // Link to scene3
+                },
+                 {
+                    "yaw": -123,
+                    "pitch": -3,
+                    "type": "scene",
+                    "text": "Go to Samping Kiri",  // Tooltip
+                    "sceneId": "scene8"  // Link to scene8
+                },
+                {
+                    "yaw": -68,
+                    "pitch": -3,
+                    "type": "scene",
+                    "text": "Go to Halaman Belakang",  // Tooltip
+                    "sceneId": "scene6"  // Link to scene6
+                }
+            ]
+            },
+
+            "scene3":{
+                "title": "Passinringan",
+                "type": "equirectangular",
+                "panorama": "/assets/360_images/tengahbawah.jpg",
+                "hotSpots": [
+                {
+                    "yaw": 0,
+                    "pitch": -5,
+                    "type": "scene",
+                    "text": "Go to Halaman Belakang",  // Tooltip
+                    "sceneId": "scene6"  // Link to scene6
+                },
+                {
+                    "yaw": -58,
+                    "pitch": -8,
+                    "type": "scene",
+                    "text": "Go to Tangga Kedua",  // Tooltip
+                    "sceneId": "scene5"  // Link to scene5
+                },
+                {
+                    "yaw": 80,
+                    "pitch": -3,
+                    "type": "scene",
+                    "text": "Go to Samping Kanan",  // Tooltip
+                    "sceneId": "scene7"  // Link to scene7
+                },
+                {
+                    "yaw": -130,
+                    "pitch": -8,
+                    "type": "scene",
+                    "text": "Go to Tangga Utama",  // Tooltip
+                    "sceneId": "scene2"  // Link to scene2
+                },
+                {
+                    "yaw": -77,
+                    "pitch": -3,
+                    "type": "scene",
+                    "text": "Go to Samping Kiri",  // Tooltip
+                    "sceneId": "scene7"  // Link to scene7
+                },
+                {
+                    "yaw": -170,
+                    "pitch": -6,
+                    "type": "scene",
+                    "text": "Go to Halaman Depan",  // Tooltip
+                    "sceneId": "scene1"  // Link to scene1
+                }
+            ]
+            },
+            
+             "scene4":{
+                "title": "Loteng",
+                "type": "equirectangular",
+                "panorama": "/assets/360_images/depanpintu1.jpg",
+                "hotSpots": [
+                {
+                    "yaw": 0,
+                    "pitch": -15,
+                    "type": "scene",
+                    "text": "Pintu Depan",  // Tooltip
+                    "sceneId": "scene9"  // Link to scene9
+                },
+                {
+                    "yaw": -85,
+                    "pitch": -45,
+                    "type": "scene",
+                    "text": "Go to Tangga Utama",  // Tooltip
+                    "sceneId": "scene2"  // Link to scene2
+                }
+            ]
+            },
+            
+            "scene5":{
+                "title": "Tangga Kedua",
+                "type": "equirectangular",
+                "panorama": "/assets/360_images/tanggakedua.jpg",
+                "hotSpots": [
+                {
+                    "yaw": 0,
+                    "pitch": 10,
+                    "type": "scene",
+                    "text": "Go to Pintu Belakang",  // Tooltip
+                    "sceneId": "scene10"  // Link to scene10
+                },
+                {
+                    "yaw": -100,
+                    "pitch": -8,
+                    "type": "scene",
+                    "text": "Go to Samping Kiri",  // Tooltip
+                    "sceneId": "scene8"  // Link to scene8
+                },
+                {
+                    "yaw": 98,
+                    "pitch": -15,
+                    "type": "scene",
+                    "text": "Go to Passinringan",  // Tooltip
+                    "sceneId": "scene3"  // Link to scene3
+                },
+                {
+                    "yaw": 95,
+                    "pitch": -3,
+                    "type": "scene",
+                    "text": "Go to Samping Kanan",  // Tooltip
+                    "sceneId": "scene7"  // Link to scene7
+                },
+                {
+                    "yaw": -178,
+                    "pitch": -6,
+                    "type": "scene",
+                    "text": "Go to Tangga Utama",  // Tooltip
+                    "sceneId": "scene2"  // Link to scene2
+                },
+                {
+                    "yaw": -190,
+                    "pitch": -3,
+                    "type": "scene",
+                    "text": "Go to Halaman Depan",  // Tooltip
+                    "sceneId": "scene1"  // Link to scene1
+                },
+                {
+                    "yaw": 28,
+                    "pitch": -10,
+                    "type": "scene",
+                    "text": "Go to Halaman Belakang",  // Tooltip
+                    "sceneId": "scene6"  // Link to scene6
+                }
+            ]
+            },
+            "scene6":{
+                "title": "Halaman Belakang",
+                "type": "equirectangular",
+                "panorama": "/assets/360_images/belakang.jpg",
+                "hotSpots": [
+                {
+                    "yaw": -45,
+                    "pitch": -3,
+                    "type": "scene",
+                    "text": "Go to Samping Kanan",  // Tooltip
+                    "sceneId": "scene7"  // Link to scene7
+                },
+                {
+                    "yaw": 10,
+                    "pitch": -8,
+                    "type": "scene",
+                    "text": "Go to Passinringan",  // Tooltip
+                    "sceneId": "scene3"  // Link to scene3
+                },
+                {
+                    "yaw": 55,
+                    "pitch": -3,
+                    "type": "scene",
+                    "text": "Go to Samping Kiri",  // Tooltip
+                    "sceneId": "scene7"  // Link to scene7
+                },
+                {
+                    "yaw": 26,
+                    "pitch": -4,
+                    "type": "scene",
+                    "text": "Go to Tangga Utama",  // Tooltip
+                    "sceneId": "scene2"  // Link to scene2
+                },
+                {
+                    "yaw": 38,
+                    "pitch": -5,
+                    "type": "scene",
+                    "text": "Go to Tangga Kedua",  // Tooltip
+                    "sceneId": "scene5"  // Link to scene5
+                }
+            ]
+            },
+            "scene7":{
+                "title": "Samping Kanan",
+                "type": "equirectangular",
+                "panorama": "/assets/360_images/Kiri.jpg",
+                "hotSpots": [
+                {
+                    "yaw": -45,
+                    "pitch": -3,
+                    "type": "scene",
+                    "text": "Go to Halaman Depan",  // Tooltip
+                    "sceneId": "scene1"  // Link to scene1
+                },
+                {
+                    "yaw": 10,
+                    "pitch": -8,
+                    "type": "scene",
+                    "text": "Go to Passinringan",  // Tooltip
+                    "sceneId": "scene3"  // Link to scene3
+                },
+                {
+                    "yaw": 10,
+                    "pitch": -3,
+                    "type": "scene",
+                    "text": "Go to Tangga Kedua",  // Tooltip
+                    "sceneId": "scene5"  // Link to scene5
+                },
+                {
+                    "yaw": -20,
+                    "pitch": -4,
+                    "type": "scene",
+                    "text": "Go to Tangga Utama",  // Tooltip
+                    "sceneId": "scene2"  // Link to scene2
+                },
+                {
+                    "yaw": 45,
+                    "pitch": -5,
+                    "type": "scene",
+                    "text": "Go to Halaman Belakang",  // Tooltip
+                    "sceneId": "scene6"  // Link to scene6
+                },
+                {
+                    "yaw": 5,
+                    "pitch": -3,
+                    "type": "scene",
+                    "text": "Go to Samping Kiri",  // Tooltip
+                    "sceneId": "scene8"  // Link to scene8
+                }
+            ]
+            },
+            "scene8":{
+                "title": "Samping Kiri",
+                "type": "equirectangular",
+                "panorama": "/assets/360_images/kanan.jpg",
+                "hotSpots": [
+                {
+                    "yaw": -30,
+                    "pitch": -6,
+                    "type": "scene",
+                    "text": "Go to Halaman Belakang",  // Tooltip
+                    "sceneId": "scene6"  // Link to scene6
+                },
+                {
+                    "yaw": 2,
+                    "pitch": -8,
+                    "type": "scene",
+                    "text": "Go to Passinringan",  // Tooltip
+                    "sceneId": "scene3"  // Link to scene3
+                },
+                {
+                    "yaw": -3,
+                    "pitch": -12,
+                    "type": "scene",
+                    "text": "Go to Tangga Kedua",  // Tooltip
+                    "sceneId": "scene5"  // Link to scene5
+                },
+                {
+                    "yaw": 52,
+                    "pitch": -6,
+                    "type": "scene",
+                    "text": "Go to Tangga Utama",  // Tooltip
+                    "sceneId": "scene2"  // Link to scene2
+                },
+                {
+                    "yaw": 58,
+                    "pitch": -5,
+                    "type": "scene",
+                    "text": "Go to Halaman Depan",  // Tooltip
+                    "sceneId": "scene1"  // Link to scene1
+                },
+                {
+                    "yaw": 5,
+                    "pitch": -3,
+                    "type": "scene",
+                    "text": "Go to Samping Kanan",  // Tooltip
+                    "sceneId": "scene7"  // Link to scene7
+                }
+            ]
+            },
+             "scene9":{
+                "title": "Pintu Depan",
+                "type": "equirectangular",
+                "panorama": "/assets/360_images/masuk.jpg",
+                "hotSpots": [
+                {
+                    "yaw": 175,
+                    "pitch": -22,
+                    "type": "scene",
+                    "text": "Go to Loteng",  // Tooltip
+                    "sceneId": "scene4"  // Link to scene4
+                },
+                {
+                    "yaw": -10,
+                    "pitch": -8,
+                    "type": "scene",
+                    "text": "Go to Pintu Belakang",  // Tooltip
+                    "sceneId": "scene10"  // Link to scene10
+                },
+                {
+                    "yaw": 55,
+                    "pitch": -10,
+                    "type": "scene",
+                    "text": "Go to Tengah",  // Tooltip
+                    "sceneId": "scene11"  // Link to scene11
+                }
+            ]
+            },
+            "scene10":{
+                "title": "Pintu Belakang",
+                "type": "equirectangular",
+                "panorama": "/assets/360_images/dalampintu2.jpg",
+                "hotSpots": [
+                {
+                    "yaw": 95,
+                    "pitch": -22,
+                    "type": "scene",
+                    "text": "Go to Tangga Kedua",  // Tooltip
+                    "sceneId": "scene5"  // Link to scene5
+                },
+                {
+                    "yaw": 40,
+                    "pitch": -8,
+                    "type": "scene",
+                    "text": "Go to Tengah",  // Tooltip
+                    "sceneId": "scene11"  // Link to scene11
+                }
+            ]
+            },
+             "scene11":{
+                "title": "Tengah",
+                "type": "equirectangular",
+                "panorama": "/assets/360_images/tengahdalam.jpg",
+                "hotSpots": [
+                {
+                    "yaw": 220,
+                    "pitch": -13,
+                    "type": "scene",
+                    "text": "Go to Pintu Depan",  // Tooltip
+                    "sceneId": "scene9"  // Link to scene9
+                },
+                {
+                    "yaw": -55,
+                    "pitch": -8,
+                    "type": "scene",
+                    "text": "Go to Pintu Belakang",  // Tooltip
+                    "sceneId": "scene10"  // Link to scene10
+                }
+            ]
+            },
+            "scene12":{
+                "title": "Pagar",
+                "type": "equirectangular",
+                "panorama": "/assets/360_images/depanrumah.jpg",
+                "hotSpots": [
+                {
+                    "yaw": 0,
+                    "pitch": 0,
+                    "type": "scene",
+                    "text": "Masuk",  // Tooltip
+                    "sceneId": "scene1"  // Link to scene1
+                }
+            ]
+            }
+        }
+    });
+
+    function changeScene(sceneId) {
+        viewer.loadScene(sceneId);
+    }
+    document.getElementById('mainMenuBtn').addEventListener('click', () => {
+        window.location.href = 'index.html';
+    });
+
+    const panel = document.getElementById('infoPanel');
+const toggleBtn = document.getElementById('togglePanel');
+
+if (panel.classList.contains('hidden')) {
+    toggleBtn.innerText = '❮'; 
+    toggleBtn.style.right = '10px';
+}
+
+toggleBtn.addEventListener('click', () => {
+    panel.classList.toggle('hidden');
+    const hidden = panel.classList.contains('hidden');
+    toggleBtn.innerText = hidden ? '❮' : '❯';
+    toggleBtn.style.right = hidden ? '10px' : '515px';
+});
+
+</script>
+
+</body>
+</html>
