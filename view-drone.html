@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Balla labbirina Ujung Pandang – Tur Virtual</title>
+    <link rel="stylesheet" href="styles\css/view-drone.css">
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <a href="index3.html" class="back-home">← Kembali ke Beranda</a>
+      <div>
+        <h1>Video Drone Rumah Adat Balla Labbirina Ujung Pandang</h1>
+        <p class="muted">
+          Putar, amati proporsi, simetri, dan struktur geometri pada <em>Balla Labbirina Ujung Pandang</em> dari sudut pandang udara.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="content">
+      <!-- PRATINJAU UTAMA -->
+      <section class="video-main-section">
+        <h2>Pratinjau Utama</h2>
+        <div class="video-main-wrapper">
+          <video
+            id="mainVideo"
+            class="video-main"
+            controls
+            playsinline
+            poster="assets\images\introdrone.png">
+            <source src="assets\drone\intro1.mp4" type="video/mp4">
+            Browser Anda tidak mendukung pemutar video HTML5.
+          </video>
+        </div>
+      </section>
+
+      <!-- VIDEO LAINNYA -->
+      <section class="video-thumbs-section">
+        <h2>Video Lainnya</h2>
+        <p class="thumbs-note">
+          Pilih salah satu video di bawah untuk diputar sebagai pratinjau utama.
+        </p>
+
+        <div class="thumbs-grid">
+          <!-- Thumb 1 -->
+          <button class="thumb-card"
+                  type="button"
+                  data-src="assets\drone\atas1.mp4"
+                  data-poster="assets\images\atasdrone.png">
+            <div class="thumb-video-frame">
+              <video class="thumb-video" muted playsinline preload="metadata"
+                     poster="assets\images\atasdrone.png">
+                <source src="assets\drone\atas1.mp4" type="video/mp4">
+              </video>
+            </div>
+            <span class="thumb-label">Tampak dari Atas</span>
+          </button>
+
+          <!-- Thumb 2 -->
+          <button class="thumb-card"
+                  type="button"
+                  data-src="assets\drone\depan.mp4"
+                  data-poster="assets\images\depandrone.jpg">
+            <div class="thumb-video-frame">
+              <video class="thumb-video" muted playsinline preload="metadata"
+                     poster="assets\images\depandrone.jpg">
+                <source src="assets\drone\depan.mp4" type="video/mp4">
+              </video>
+            </div>
+            <span class="thumb-label">Tampak dari Depan</span>
+          </button>
+
+          <!-- Thumb 3 -->
+          <button class="thumb-card"
+                  type="button"
+                  data-src="assets\drone\memutar.mp4"
+                  data-poster="assets\images\putardrone.png">
+            <div class="thumb-video-frame">
+              <video class="thumb-video" muted playsinline preload="metadata"
+                     poster="assets\images\putardrone.png">
+                <source src="assets\drone\memutar.mp4" type="video/mp4">
+              </video>
+            </div>
+            <span class="thumb-label">Memutari</span>
+          </button>
+  </div> <!-- 👍 WAJIB DITUTUP -->
+         
+      <!-- KETERANGAN -->
+      <section class="desc-section">
+        <h2>Keterangan</h2>
+        <p>
+          Video drone ini digunakan untuk mendukung pembelajaran etnomatematika:
+          mengamati proporsi, simetri, dan struktur geometri pada rumah adat Makassar
+          <strong>Balla Labbirina Ujung Pandang</strong>. Siswa dapat menghubungkan bentuk tiang, atap,
+          tangga, dan ruang dengan konsep geometri yang dipelajari di kelas.
+        </p>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 · Video Drone Rumah Adat Balla Labbirina Ujung Pandang · Dibangun untuk pembelajaran etnomatematika · Tim Pengembang Rumah Adat Makassar
+  </footer>
+
+  <!-- Script kecil untuk mengganti video utama ketika thumb diklik -->
+  <script>
+    const mainVideo = document.getElementById('mainVideo');
+    const thumbButtons = document.querySelectorAll('.thumb-card');
+
+    thumbButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const src = btn.getAttribute('data-src');
+        const poster = btn.getAttribute('data-poster');
+
+        // Ganti source utama
+        mainVideo.pause();
+        mainVideo.setAttribute('poster', poster || '');
+        mainVideo.querySelector('source').setAttribute('src', src);
+        mainVideo.load();
+        mainVideo.play().catch(() => { /* di iOS kadang butuh tap lagi */ });
+      });
+    });
+  </script>
+</body>
+</html>
